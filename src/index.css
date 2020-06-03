@@ -88,7 +88,7 @@ button:active {
 
 .display > * {
   
-  height: 25px;
+  min-height: 25px;
   text-align: right;
   
 }
@@ -104,7 +104,7 @@ button:active {
 
 .formula {
   color: #999;
-  height: 1em;
+  min-height: 1em;
   font-size: 1.5em;
   font-weight: lighter;
   padding-bottom: 5px;

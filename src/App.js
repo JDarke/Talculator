@@ -19,7 +19,9 @@ export default class App extends React.Component {
         sign: '+',
         last: '',
         output: '',
-        evald: false
+        evald: false,
+        maxChars: 8
+        
     };
     this.handleNumbers = this.handleNumbers.bind(this);
     this.handleSign = this.handleSign.bind(this);
@@ -46,10 +48,12 @@ export default class App extends React.Component {
   handleNumbers(e) {
       var value = this.state.value;
       if (!this.state.evald) {
-        this.setState({
-          value: value + e.target.value
-          //formula: this.state.formula += e.target.value
-        }); 
+        if (value.length < this.state.maxChars) {
+          this.setState({
+            value: value + e.target.value
+            //formula: this.state.formula += e.target.value
+          }); 
+        }
       } else {
           this.setState({
             value: e.target.value,
