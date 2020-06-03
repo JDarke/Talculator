@@ -1,14 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import Buttons from './Components/Buttons'
 import Display from './Components/Display'
-//import App from './App';
+
 
 let ceRegex = new RegExp(/\d+$|(\d+[\+x\/-])$/);
-let opRegex = new RegExp(/[+*\/-]$/);
+let opRegex = new RegExp(/[+x\/-]{1,}$/);
 let evalRegex = new RegExp(/[+*\/-]+$/);
-let commaRegex = new RegExp(/\d{3}$/);
 
 
 export default class App extends React.Component {
@@ -57,7 +55,6 @@ export default class App extends React.Component {
           this.setState({
             value: value,
             output: output.toLocaleString()
-            //formula: this.state.formula += e.target.value
           }); 
         }
       } else {
@@ -71,63 +68,69 @@ export default class App extends React.Component {
             evald: false
           });
       }
-      
-      /*this.setState({
-          value: '',
-          prevValue: '0',
-          formula: '',
-          sign: '+',
-          last: '',
-          output: '',
-          evald: false
-        });*/
   }
   
   handleSign(e) {
     
   }
+
+  
   
   handleOperator(e) {
-    var value = this.state.value + e.target.value;
+    var value = this.state.value 
     var formula = this.state.formula
+    if (!formula.match(opRegex)) {
+      value += e.target.value;
+    }
+      
     if (!this.state.evald) {
       this.setState({
         prevValue: this.state.value,
         value: '',
         output: '',
-        formula: formula + value
+        formula: formula + value.replace('±','')
       });
     } else {
         this.setState({
           prevValue: '',
           value: '',
-          formula: this.state.formula + e.target.value.replace(',',''),
+          formula: this.state.formula + e.target.value.replace(',','').replace('±',''),
           evald: false
         });
     }
-    console.log(this.state)
+    //console.log(this.state)
   }
   
   handleEval(e) {
     var value = this.state.value;
     var formula = this.state.formula;
-    var output;
+    
     if (!this.state.evald) {
       if (this.state.value !== '') {
         this.setState({
            value: '',
-           formula: formula += value
-           //output: eval(formula)
+           formula: formula + value
         });
       }
       formula = formula.replace('x', '*');
-      formula = formula.replace(evalRegex, '')
-      var answer = eval(formula);
-      this.setState({
-         value: '',
-         output: answer.toLocaleString(),
-         evald: true
-      });
+      formula = formula.replace(evalRegex, '');
+      
+      try {
+        var answer = eval(formula);
+          this.setState({
+             value: '',
+             output: answer.toLocaleString(),
+             evald: true
+          });
+      } catch (e) {
+        this.setState({
+          value: '',
+          output: 'ERROR',
+          formula: '',
+          evald: true
+       });
+       setTimeout(this.reset, 2000)
+      }
     }   
   }
   
@@ -138,7 +141,7 @@ export default class App extends React.Component {
       
       this.setState({
         //value: '',
-        formula: this.state.formula.replace(ceRegex, '')
+        formula: this.state.formula.replace(ceRegex, '').replace('±','')
       });
       console.log(this.state.formula)
     }

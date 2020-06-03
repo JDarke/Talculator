@@ -99,7 +99,7 @@ button:active {
   
   color: #666;
   font-weight: 200;
-  
+  transition: all .3s ease;
 }
 
 .formula {
