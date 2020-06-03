@@ -8,6 +8,8 @@ import Display from './Components/Display'
 let ceRegex = new RegExp(/\d+$|(\d+[\+x\/-])$/);
 let opRegex = new RegExp(/[+*\/-]$/);
 let evalRegex = new RegExp(/[+*\/-]+$/);
+let commaRegex = new RegExp(/\d{3}$/);
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -20,7 +22,7 @@ export default class App extends React.Component {
         last: '',
         output: '',
         evald: false,
-        maxChars: 8
+        maxChars: 10
         
     };
     this.handleNumbers = this.handleNumbers.bind(this);
@@ -47,10 +49,14 @@ export default class App extends React.Component {
   
   handleNumbers(e) {
       var value = this.state.value;
+      var output;
       if (!this.state.evald) {
-        if (value.length < this.state.maxChars) {
+        if (value.length < this.state.maxChars-1) {
+          value += e.target.value;
+          output = parseFloat(value);
           this.setState({
-            value: value + e.target.value
+            value: value,
+            output: output.toLocaleString()
             //formula: this.state.formula += e.target.value
           }); 
         }
@@ -83,17 +89,19 @@ export default class App extends React.Component {
   
   handleOperator(e) {
     var value = this.state.value + e.target.value;
+    var formula = this.state.formula
     if (!this.state.evald) {
       this.setState({
         prevValue: this.state.value,
         value: '',
-        formula: this.state.formula + value
+        output: '',
+        formula: formula + value
       });
     } else {
         this.setState({
           prevValue: '',
           value: '',
-          formula: this.state.formula + e.target.value,
+          formula: this.state.formula + e.target.value.replace(',',''),
           evald: false
         });
     }
@@ -102,7 +110,8 @@ export default class App extends React.Component {
   
   handleEval(e) {
     var value = this.state.value;
-    var formula = this.state.formula
+    var formula = this.state.formula;
+    var output;
     if (!this.state.evald) {
       if (this.state.value !== '') {
         this.setState({
@@ -113,8 +122,10 @@ export default class App extends React.Component {
       }
       formula = formula.replace('x', '*');
       formula = formula.replace(evalRegex, '')
+      var answer = eval(formula);
       this.setState({
-         value: eval(formula),
+         value: '',
+         output: answer.toLocaleString(),
          evald: true
       });
     }   
@@ -142,7 +153,7 @@ export default class App extends React.Component {
       <div className="calculator">
         <Display 
           formula={this.state.formula} 
-          value={this.state.value} 
+          value={this.state.output} 
         />
         
         <Buttons 
