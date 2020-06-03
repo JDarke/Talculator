@@ -1,3 +1,9 @@
+A simple calculator app, created as an excercise in React and demonstration of soft CSS shadowing & gradients.
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
