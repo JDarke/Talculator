@@ -21,7 +21,7 @@ export default class App extends React.Component {
         last: '',
         output: '',
         evald: false,
-        maxChars: 16,
+        maxChars: 17,
         outputSize: 3.2
         
     };
@@ -50,35 +50,38 @@ export default class App extends React.Component {
 
   getFontSize(str) {
     switch(true) {
-      case (str.length > 16):
+      case (str.length > this.state.maxChars):
         return 0;
-        break;
+        
       case (str.length === 9):
-        return 3;
-        break;
+        return 3.1;
+        
       case (str.length === 10):
-        return 2.5;
-        break;
+        return 2.75;
+
       case (str.length === 11):
-        return 2.35;
-        break;
+          return 2.5;  
+
       case (str.length === 12):
-        return 2.25;
-        break;
+        return 2.35;
+        
       case (str.length === 13):
         return 2.15;
-        break;
+        
       case (str.length === 14):
-        return 2;
-        break;
+        return 2.05;
+        
       case (str.length === 15):
-        return 1.75;
-        break;
+        return 1.85;
+        
       case (str.length === 16):
-        return 1.65;
-        break;
+        return 1.70;
+        
+      case (str.length === 17):
+        return 1.6;
+        
       default:
-        return 3.5;
+        return 3.2;
     }
   }
 
@@ -92,7 +95,7 @@ export default class App extends React.Component {
         if (value.length < this.state.maxChars) {
           value += e.target.value;
           output = parseFloat(value);
-          var size = this.getFontSize(value);
+          var size = this.getFontSize(value.toLocaleString());
           
           
           this.setState({
@@ -108,7 +111,7 @@ export default class App extends React.Component {
               last: '',
               output: '',
               evald: false,
-              outputSize: 3.5
+              outputSize: 3.2
             });
           }
         }
