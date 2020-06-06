@@ -3,10 +3,11 @@ import './index.css';
 import Buttons from './Components/Buttons'
 import Display from './Components/Display'
 
-
 let ceRegex = new RegExp(/\d+$|(\d+[\+x\/-])$/);
-let opRegex = new RegExp(/[+x\/-]{1,}$/);
+let opRegex = new RegExp(/[+x\/-]$/);
 let evalRegex = new RegExp(/[+*\/-]+$/);
+let decRegex = new RegExp(/./);
+
 
 
 export default class App extends React.Component {
@@ -20,7 +21,8 @@ export default class App extends React.Component {
         last: '',
         output: '',
         evald: false,
-        maxChars: 10
+        maxChars: 16,
+        outputSize: 3.2
         
     };
     this.handleNumbers = this.handleNumbers.bind(this);
@@ -45,17 +47,70 @@ export default class App extends React.Component {
     });
   }
   
+
+  getFontSize(str) {
+    switch(true) {
+      case (str.length > 16):
+        return 0;
+        break;
+      case (str.length === 9):
+        return 3;
+        break;
+      case (str.length === 10):
+        return 2.5;
+        break;
+      case (str.length === 11):
+        return 2.35;
+        break;
+      case (str.length === 12):
+        return 2.25;
+        break;
+      case (str.length === 13):
+        return 2.15;
+        break;
+      case (str.length === 14):
+        return 2;
+        break;
+      case (str.length === 15):
+        return 1.75;
+        break;
+      case (str.length === 16):
+        return 1.65;
+        break;
+      default:
+        return 3.5;
+    }
+  }
+
+
   handleNumbers(e) {
       var value = this.state.value;
       var output;
+      
+      
       if (!this.state.evald) {
-        if (value.length < this.state.maxChars-1) {
+        if (value.length < this.state.maxChars) {
           value += e.target.value;
           output = parseFloat(value);
+          var size = this.getFontSize(value);
+          
+          
           this.setState({
             value: value,
-            output: output.toLocaleString()
-          }); 
+            output: output.toLocaleString(),
+            outputSize: size
+          });
+          if (size === '0') {
+            this.setState({
+              prevValue: '0',
+              formula: '',
+              sign: '+',
+              last: '',
+              output: '',
+              evald: false,
+              outputSize: 3.5
+            });
+          }
         }
       } else {
           this.setState({
@@ -74,18 +129,21 @@ export default class App extends React.Component {
     
   }
 
-  
+  handleDecimal(e) {
+    /*check if number alrerady has dec plc, add if not */
+    
+  }
   
   handleOperator(e) {
     var value = this.state.value 
     var formula = this.state.formula
-    if (!formula.match(opRegex)) {
+    if (!formula.match(opRegex) || value !== '') {
       value += e.target.value;
     }
       
     if (!this.state.evald) {
       this.setState({
-        prevValue: this.state.value,
+        prevValue: value,
         value: '',
         output: '',
         formula: formula + value.replace('±','')
@@ -94,7 +152,7 @@ export default class App extends React.Component {
         this.setState({
           prevValue: '',
           value: '',
-          formula: this.state.formula + e.target.value.replace(',','').replace('±',''),
+          formula: formula + e.target.value.replace(',','').replace('±',''),
           evald: false
         });
     }
@@ -109,18 +167,20 @@ export default class App extends React.Component {
       if (this.state.value !== '') {
         this.setState({
            value: '',
-           formula: formula + value
+           formula: formula += value
         });
       }
       formula = formula.replace('x', '*');
       formula = formula.replace(evalRegex, '');
       
       try {
-        var answer = eval(formula);
+        var answer = Math.round(100000000 * eval(formula)) / 100000000;
+       
           this.setState({
              value: '',
              output: answer.toLocaleString(),
-             evald: true
+             evald: true,
+             outputSize: this.getFontSize(answer.toLocaleString())    // need to use localString version of value everywhere.
           });
       } catch (e) {
         this.setState({
@@ -140,21 +200,17 @@ export default class App extends React.Component {
     } else if(e.target.value === "CE") {
       
       this.setState({
-        //value: '',
         formula: this.state.formula.replace(ceRegex, '').replace('±','')
       });
       console.log(this.state.formula)
     }
   }
   
-  handleDecimal(e) {
-    /*check if number alrerady has dec plc, add if not */
-  }
-  
   render() {
     return (
       <div className="calculator">
         <Display 
+          outputSize={this.state.outputSize}
           formula={this.state.formula} 
           value={this.state.output} 
         />

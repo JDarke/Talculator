@@ -7,7 +7,7 @@ export default class Display extends React.Component {
       return (
         <div className="display">
           <FormulaScrn formula={this.props.formula} />
-          <Value value={this.props.value} /> 
+          <Value outputSize={this.props.outputSize} value={this.props.value} /> 
         </div>
       );
     }
