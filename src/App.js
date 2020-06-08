@@ -8,8 +8,6 @@ let opRegex = new RegExp(/[+x\/-]$/);
 let evalRegex = new RegExp(/[+*\/-]+$/);
 let decRegex = new RegExp(/\./);
 
-
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +45,6 @@ export default class App extends React.Component {
     });
   }
   
-
   getFontSize(str) {
     switch(true) {
       case (str.length > this.state.maxChars):
@@ -84,7 +81,6 @@ export default class App extends React.Component {
         return 3.2;
     }
   }
-
 
   handleNumbers(e) {
       var value = this.state.value;
@@ -201,7 +197,6 @@ export default class App extends React.Component {
           evald: false
         });
     }
-    //console.log(this.state)
   }
   
   handleEval(e) {
@@ -226,7 +221,7 @@ export default class App extends React.Component {
              output: answer.toLocaleString(),
              evald: true,
              outputSize: this.getFontSize(answer.toString())    
-            // need to use localString version of value everywhere.  I didnt count commas in display.  Go back and recalibrate!!!  
+           
           });
       } catch (e) {
         this.setState({

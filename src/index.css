@@ -18,7 +18,7 @@ code {
   height: 100vh;
   
   font-size: 18px;
-  background: #aaa;
+  background: linear-gradient(145deg, #ccc, #aaa); 
   font-family: sans-serif;
 }
 
@@ -99,7 +99,7 @@ button:active {
   
   color: #666;
   font-weight: 200;
-  //transition: all .3s ease;
+  transition: all .3s ease;
 }
 
 .formula {
