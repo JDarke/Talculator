@@ -7,7 +7,7 @@ export default class Buttons extends React.Component {
       <div className="buttons">
         <button value="AC" className="clear" onClick={this.props.handleClr}>AC</button>
         <button value="CE" className="clear" onClick={this.props.handleClr}>CE</button>
-        <button value="±" className="operator" onClick={this.props.handleOp}>±</button>
+        <button value="±" className="operator" onClick={this.props.handleSign}>±</button>
         <button value="/" className="operator" onClick={this.props.handleOp}>/</button>
         <button value="7" className="number" onClick={this.props.handleNum}>7</button>
         <button value="8" className="number" onClick={this.props.handleNum}>8</button>
