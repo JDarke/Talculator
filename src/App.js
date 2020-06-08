@@ -6,7 +6,7 @@ import Display from './Components/Display'
 let ceRegex = new RegExp(/\d+$|(\d+[\+x\/-])$/);
 let opRegex = new RegExp(/[+x\/-]$/);
 let evalRegex = new RegExp(/[+*\/-]+$/);
-let decRegex = new RegExp(/./);
+let decRegex = new RegExp(/\./);
 
 
 
@@ -133,8 +133,45 @@ export default class App extends React.Component {
   }
 
   handleDecimal(e) {
-    /*check if number alrerady has dec plc, add if not */
-    
+    var value = this.state.value;
+    var output = this.state.output;
+    var formula = this.state.formula
+      
+      if (!this.state.evald) {
+        if (!this.state.value.match(decRegex) && value.length < this.state.maxChars) {
+          value += e.target.value;
+          output = parseFloat(value);
+          var size = this.getFontSize(value.toLocaleString());
+          
+          
+          this.setState({
+            value: value,
+            output: output + '.',
+            outputSize: size
+          });
+          if (size === '0') {
+            this.setState({
+              prevValue: '0',
+              formula: '',
+              sign: '+',
+              last: '',
+              output: '',
+              evald: false,
+              outputSize: 3.2
+            });
+          }
+        }
+      } else {
+          this.setState({
+            value: e.target.value,
+            prevValue: '0',
+            formula: '',
+            sign: '+',
+            last: '',
+            output: '',
+            evald: false
+          });
+      }
   }
   
   handleOperator(e) {
