@@ -169,7 +169,7 @@ export default class App extends React.Component {
     if (!this.state.evald) {
       if (this.state.value !== '') {
         this.setState({
-           value: '',
+           //value: '',
            formula: formula += value
         });
       }
@@ -180,10 +180,11 @@ export default class App extends React.Component {
         var answer = Math.round(100000000 * eval(formula)) / 100000000;
        
           this.setState({
-             value: '',
+             value: answer,
              output: answer.toLocaleString(),
              evald: true,
-             outputSize: this.getFontSize(answer.toLocaleString())    // need to use localString version of value everywhere.
+             outputSize: this.getFontSize(answer.toString())    
+            // need to use localString version of value everywhere.  I didnt count commas in display.  Go back and recalibrate!!!  
           });
       } catch (e) {
         this.setState({
