@@ -8,8 +8,6 @@ let opRegex = new RegExp(/[+x\/-]$/);
 let evalRegex = new RegExp(/[+*\/-]+$/);
 let decRegex = new RegExp(/\./);
 
-
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +45,6 @@ export default class App extends React.Component {
     });
   }
   
-
   getFontSize(str) {
     switch(true) {
       case (str.length > this.state.maxChars):
@@ -85,19 +82,16 @@ export default class App extends React.Component {
     }
   }
 
-
   handleNumbers(e) {
       var value = this.state.value;
       var output;
-      
-      
+    
       if (!this.state.evald) {
         if (value.length < this.state.maxChars) {
           value += e.target.value;
           output = parseFloat(value);
           var size = this.getFontSize(value.toLocaleString());
-          
-          
+
           this.setState({
             value: value,
             output: output.toLocaleString(),
@@ -129,21 +123,34 @@ export default class App extends React.Component {
   }
   
   handleSign(e) {
-    
+    var value = this.state.output;
+    if (value[0] === '-') {
+      this.setState({
+        value: value.substr(1),
+        output: value.substr(1).toLocaleString()
+      })
+    } else {
+      this.setState({
+        value: '-' + value,
+        output: '-' + value.toLocaleString(),
+      })
+    }
   }
 
   handleDecimal(e) {
     var value = this.state.value;
-    var output = this.state.output;
+
+    var output = this.state.output; 
+
+  
     
       
+
       if (!this.state.evald) {
         if (!this.state.value.match(decRegex) && value.length < this.state.maxChars) {
           value += e.target.value;
           output = parseFloat(value).toLocaleString();
           var size = this.getFontSize(value.toLocaleString());
-          
-          //alert('boo');
           this.setState({
             value: value,
             output: output + '.',
@@ -196,7 +203,6 @@ export default class App extends React.Component {
           evald: false
         });
     }
-    //console.log(this.state)
   }
   
   handleEval(e) {
@@ -221,7 +227,7 @@ export default class App extends React.Component {
              output: answer.toLocaleString(),
              evald: true,
              outputSize: this.getFontSize(answer.toString())    
-            // need to use localString version of value everywhere.  I didnt count commas in display.  Go back and recalibrate!!!  
+           
           });
       } catch (e) {
         this.setState({
@@ -239,7 +245,6 @@ export default class App extends React.Component {
     if (e.target.value === "AC") {
       this.reset();
     } else if(e.target.value === "CE") {
-      
       this.setState({
         formula: this.state.formula.replace(ceRegex, '').replace('±','')
       });
