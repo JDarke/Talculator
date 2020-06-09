@@ -139,11 +139,17 @@ export default class App extends React.Component {
 
   handleDecimal(e) {
     var value = this.state.value;
+
     var output = this.state.output; 
+
+  
+    
+      
+
       if (!this.state.evald) {
         if (!this.state.value.match(decRegex) && value.length < this.state.maxChars) {
           value += e.target.value;
-          output = parseFloat(value);
+          output = parseFloat(value).toLocaleString();
           var size = this.getFontSize(value.toLocaleString());
           this.setState({
             value: value,
