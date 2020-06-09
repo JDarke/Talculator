@@ -21,7 +21,6 @@ export default class App extends React.Component {
         evald: false,
         maxChars: 17,
         outputSize: 3.2
-        
     };
     this.handleNumbers = this.handleNumbers.bind(this);
     this.handleSign = this.handleSign.bind(this);
@@ -30,7 +29,6 @@ export default class App extends React.Component {
     this.handleClear = this.handleClear.bind(this);
     this.handleDecimal = this.handleDecimal.bind(this);
     this.reset = this.reset.bind(this);
-
   }
   
   reset() {
@@ -139,21 +137,15 @@ export default class App extends React.Component {
 
   handleDecimal(e) {
     var value = this.state.value;
-
     var output = this.state.output; 
-
-  
-    
-      
-
       if (!this.state.evald) {
         if (!this.state.value.match(decRegex) && value.length < this.state.maxChars) {
           value += e.target.value;
-          output = parseFloat(value).toLocaleString();
+          output = parseFloat(value);
           var size = this.getFontSize(value.toLocaleString());
           this.setState({
             value: value,
-            output: output + '.',
+            output: output.toLocaleString() + '.',
             outputSize: size
           });
           if (size === '0') {
