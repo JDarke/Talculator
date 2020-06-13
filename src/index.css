@@ -63,7 +63,7 @@ h1 {
   flex-direction: column;
   max-width: 360px;
   justify-content: center;
-  box-shadow:  0px 20px 35px rgba(0,0,0, 0.3), inset 0px -1px 3px #666;
+  box-shadow:  0px 10px 20px rgba(0,0,0, 0.2), inset 0px -1px 3px #999;
   background: linear-gradient(145deg, #ffffff, #f9f9f9);
 }
 
