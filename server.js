@@ -1,17 +1,13 @@
-//server.js
-const express = require('express');
-const favicon = require('express-favicon');
 const path = require('path');
-const port = process.env.PORT || 8080;
+const express = require('express');
 const app = express();
-app.use(favicon('build/favicon.ico'));
-// the / is the current directory from where the script is running
-app.use(express.static('/'));
-app.use(express.static(path.join('', 'build')));
-app.get('/ping', function (req, res) {
- return res.send('pong');
-});
-app.get('/*', function (req, res) {
-  res.sendFile(path.join('', 'build', 'index.html'));
-});
-app.listen(port)
+const port = process.env.PORT || 3000;
+const publicPath = path.join(__dirname, '..', 'public');
+app.use(express.static(publicPath));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(publicPath, 'index.html'));
+  });
+  
+app.listen(port, () => {
+    console.log(`Server is up on port ${port}!`);
+  });
