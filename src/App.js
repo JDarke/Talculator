@@ -245,22 +245,28 @@ export default class App extends React.Component {
   }
   
   render() {
-    return (
-      <div className="calculator">
-        <Display 
-          outputSize={this.state.outputSize}
-          formula={this.state.formula} 
-          value={this.state.output} 
-        />
-        
-        <Buttons 
-          handleNum={this.handleNumbers}
-          handleSign={this.handleSign}
-          handleOp={this.handleOperator}
-          handleEval={this.handleEval}
-          handleClr={this.handleClear}
-          handleDec={this.handleDecimal}/>
-      </div>
+    return ( 
+      <>
+        <div class="container">
+          <h1 class="title">Talculator 1.0</h1>
+          <div className="calculator">
+            <Display 
+              outputSize={this.state.outputSize}
+              formula={this.state.formula} 
+              value={this.state.output} 
+            />
+            
+            <Buttons 
+              handleNum={this.handleNumbers}
+              handleSign={this.handleSign}
+              handleOp={this.handleOperator}
+              handleEval={this.handleEval}
+              handleClr={this.handleClear}
+              handleDec={this.handleDecimal}/>
+          </div>
+          <div class="author">by John Darke</div>
+        </div>
+      </>
     );
   }
 }
