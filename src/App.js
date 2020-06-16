@@ -207,28 +207,29 @@ export default class App extends React.Component {
            //value: '',
            formula: formula += value
         });
-      }
-      formula = formula.replace('x', '*');
-      formula = formula.replace(evalRegex, '');
       
-      try {
-        var answer = Math.round(100000000 * eval(formula)) / 100000000;
-       
+        formula = formula.replace('x', '*');
+        formula = formula.replace(evalRegex, '');
+        
+        try {
+          var answer = Math.round(100000000 * eval(formula)) / 100000000;
+        
+            this.setState({
+              value: answer,
+              output: answer.toLocaleString(),
+              evald: true,
+              outputSize: this.getFontSize(answer.toString())    
+            
+            });
+        } catch (e) {
           this.setState({
-             value: answer,
-             output: answer.toLocaleString(),
-             evald: true,
-             outputSize: this.getFontSize(answer.toString())    
-           
-          });
-      } catch (e) {
-        this.setState({
-          value: '',
-          output: 'ERROR',
-          formula: '',
-          evald: true
-       });
-       setTimeout(this.reset, 2000)
+            value: '',
+            output: 'ERROR',
+            formula: '',
+            evald: true
+        });
+        setTimeout(this.reset, 2000)
+        }
       }
     }   
   }
@@ -264,7 +265,7 @@ export default class App extends React.Component {
               handleClr={this.handleClear}
               handleDec={this.handleDecimal}/>
           </div>
-          <div class="author">by John Darke</div>
+           <div class="author">by <a href="https://johndarke.net/home.php">John Darke</a></div>
         </div>
       </>
     );

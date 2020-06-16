@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Chewy&family=Fredoka+One&family=Modak&family=Special+Elite&display=swap');
 
+
+
+a:link, a:visited{
+  text-decoration: none;
+  color: rgba(244,244,244,1);
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -69,6 +76,8 @@ h1 {
 }
 
 button {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); 
+  -webkit-tap-highlight-color: transparent;
   cursor: pointer;
   text-shadow: inset 0px 1px 2px  #000;
   color: #666;
