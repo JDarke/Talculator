@@ -265,7 +265,7 @@ export default class App extends React.Component {
               handleClr={this.handleClear}
               handleDec={this.handleDecimal}/>
           </div>
-           <div class="author">by <a href="https://johndarke.net/home.php">John Darke</a></div>
+           <div class="author">by <a href="https://johndarke.net">John Darke</a></div>
         </div>
       </>
     );
