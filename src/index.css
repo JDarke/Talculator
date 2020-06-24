@@ -97,18 +97,19 @@ button {
   padding-right: 0px;
   padding-left: 2px;
   padding-bottom: 0px;
-  transition: all .15s ease;
-  -webkit-transition: all .15s ease;
-  -moz-transition: all .15s ease;
-  -ms-transition: all .15s ease;
-  -o-transition: all .15s ease;
+  transition: all .1s ease;
+  -webkit-transition: all .1s ease;
+  -moz-transition: all .1s ease;
+  -ms-transition: all .1s ease;
+  -o-transition: all .1s ease;
 }
 
 button:active {
   box-shadow:   inset 1px 1px 10px #e3e3e3, inset -1px -1px 10px #ffffff/*, -3px -3px 5px #e3e3e3 */;
   background: linear-gradient(145deg, #f9f9f9, #ffffff);
-  /*transform: scale(0.99);*/
-  font-size: 29.5px;
+  perspective-origin: 50vw 50vh;
+  transform: perspective(500px) translateZ(-5px) ;
+  /*font-size: 29.5px;*/
 }
 
 
