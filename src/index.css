@@ -106,7 +106,8 @@ button {
 button:active {
   box-shadow:   inset 1px 1px 10px #e3e3e3, inset -1px -1px 10px #ffffff/*, -3px -3px 5px #e3e3e3 */;
   background: linear-gradient(145deg, #f9f9f9, #ffffff);
-  font-size: 29px;
+  /*font-size: 29px;*/
+  transform: perspective(500px) translateZ(-10px);
 }
 
 .buttons {
