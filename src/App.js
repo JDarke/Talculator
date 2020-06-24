@@ -247,7 +247,6 @@ export default class App extends React.Component {
   
   render() {
     return ( 
-      <>
         <div class="container">
           <h1 class="title">Talculator 1.0</h1>
           <div className="calculator">
@@ -267,7 +266,6 @@ export default class App extends React.Component {
           </div>
            <div class="author">by <a href="https://johndarke.net/home.php">John Darke</a></div>
         </div>
-      </>
     );
   }
 }
