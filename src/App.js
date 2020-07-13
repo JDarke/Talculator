@@ -3,11 +3,10 @@ import './index.css';
 import Buttons from './Components/Buttons'
 import Display from './Components/Display'
 
-let ceRegex = new RegExp(/\d*\.?\d*$|(\d*\.?\d*[\+\*\/-])$/);  // add bracket functionality
-//let opRegex = new RegExp(/[+\*\/-]$/);
-let evalRegex = new RegExp(/[+*\/\-\.]+$/);
-//let decRegex = new RegExp(/\./);
+const ceRegex = new RegExp(/\d*\.?\d*$|(\d*\.?\d*[\+\*\/-])$/);  // add bracket functionality
+const evalRegex = new RegExp(/[+*\/\-\.]+$/);
 const signRegex = new RegExp(/(\(*\-\d*\.*\d*\)*)$/);
+const warn = 'MAX CHAR LIMIT';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -48,7 +47,7 @@ export default class App extends React.Component {
   getFontSize(str) {
     switch(true) {
       case (str.length > this.state.maxChars):
-        return 1.4;
+        return 1.6;
         
       case (str.length === 9):
         return 3.1;
@@ -85,8 +84,7 @@ export default class App extends React.Component {
   handleNumbers(e) {
     const {value, formula, last, sign, maxChars } = this.state;
     const newValue = e.target.value;
-    
- 
+
   if (last === 'eval') {
     this.setState({
       value: newValue,
@@ -108,7 +106,6 @@ export default class App extends React.Component {
         })
       } else if (value.length < maxChars ) {
         var val = last === 'op' ? newValue : value + newValue;
-        
         this.setState({
           value: val,
           output: parseFloat(val).toLocaleString(),
@@ -117,10 +114,8 @@ export default class App extends React.Component {
           last: 'num',
           outputSize: this.getFontSize(val.toString())
         })
-        console.log(this.state.output);
       }
     }
-
   }
   
   handleSign(e) {
@@ -172,8 +167,7 @@ export default class App extends React.Component {
   handleOperator(e) {
     const {value, formula, last} = this.state;
     const operator = e.target.value.replace('x', '*');
-    console.log(this.state);
-
+    
     if (last !== 'op' && value !== '' && value !== '-') {
       this.setState({
         value: operator,
@@ -184,7 +178,6 @@ export default class App extends React.Component {
         sign: '+'
       })
     }
-    console.log(this.state);
   }
   
   handleEval(e) {
@@ -192,15 +185,15 @@ export default class App extends React.Component {
       let {formula, maxChars} = this.state;
       formula = formula.replace(evalRegex, '')
       try {
-        let result = Math.round(1000000000000 * eval(formula)) / 1000000000000;
-        var output = (result.toString().length >= maxChars) ? parseFloat(result).toExponential(2) : parseFloat(result).toLocaleString();
-        console.log(output);
+        let result = Math.round(100000000000 * eval(formula)) / 100000000000;
+        var output = (result.toString().length > maxChars) ? parseFloat(result).toExponential(2) : parseFloat(result).toLocaleString();
+        console.log(output.replace(',', ''));
         this.setState({
           value: result,
           output: output,
           formula: formula + e.target.value,
           last: 'eval',
-          outputSize: this.getFontSize(output.toString())
+          outputSize: this.getFontSize(output.toString().replace(',', ''))
         })
       } catch (e) {
         this.setState({
@@ -230,8 +223,8 @@ export default class App extends React.Component {
 
   handleMax() {
     this.setState({
-      value: 'MAX CHAR LIMIT',
-      output: 'MAX CHAR LIMIT',
+      value: warn,
+      output: warn,
       prevValue: this.state.value
     })
     setTimeout( () => this.setState({
@@ -242,7 +235,6 @@ export default class App extends React.Component {
   
   render() {
     return ( 
-      <>
         <div className="container">
           <div className="calculator">
           <h1 className="title">Talculator</h1>
@@ -261,7 +253,6 @@ export default class App extends React.Component {
             <div className="author"> <a href="https://johndarke.net">JohnDarke.net</a></div>
           </div>
         </div>
-      </>
     );
   }
 }
