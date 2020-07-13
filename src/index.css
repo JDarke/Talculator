@@ -1,10 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Chewy&family=Fredoka+One&family=Modak&family=Special+Elite&display=swap');
 
-
+html {
+  height: 100%;
+}
 
 a:link, a:visited{
   text-decoration: none;
-  color: rgba(244,244,244,1);
+  color: #f8f8f8;
+  transition: color .4s ease;
 }
 
 body {
@@ -25,32 +28,40 @@ code {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-size: 18px;
+  font-size: 16px;
   background: #aaa;
   background-color: #d9d9d9;
   background-image: radial-gradient(circle, rgba(233,233,233,1) 48%, rgba(209,213,213,1) 100%);
   font-family: sans-serif;
-  min-height: 850px;
+  min-height: 650px;
+}
+
+
+h1, .author {
+  font-size: 1em;
+  color:  #f8f8f8;
+  margin: 0px;
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: lighter;
+  margin: 0px 0 0;
+  align-self: center;
+  text-shadow: 0px -1px 2.5px rgba(50,50,50, .3);
 }
 
 h1 {
-  font-size: 3em;
-  color:  rgba(244,244,244,1);
-  margin-left: 50px;
-  font-family: 'Fredoka One', sans-serif;
-  align-self: flex-start;
-  filter: drop-shadow(0 0 10px rgba(250,250,250, .5));
-  -webkit-filter: drop-shadow(0 0 10px rgba(250,250,250, .5));
+  font-size: 2em;
+  letter-spacing: .4em;
 }
 
 .author {
-  font-size: 1em;
-  color:  rgba(244,244,244,1);
-  margin: 50px;
-  font-family: 'Fredoka One', sans-serif;
-  align-self: flex-end;
-  filter: drop-shadow(0 0 10px rgba(250,250,250, .5));
-  -webkit-filter: drop-shadow(0 0 10px rgba(250,250,250, .5));
+  letter-spacing: 1px;
+  margin: .5em 0 -.5em;
+  transition: color .4s ease;
+}
+
+.author:hover, a:hover {
+  
+  color: #aaa;
 }
 
 .container {
@@ -60,16 +71,16 @@ h1 {
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .calculator {
-  border-radius: 50px;
-  padding: 20px;
+  border-radius: 3em;
+  padding: 1.1em;
   background: white;
   display: flex;
   flex-direction: column;
-  max-width: 360px;
+  width: 330px;
   justify-content: center;
   box-shadow:  0px 10px 20px rgba(0,0,0, 0.2), inset 0px -1px 3px #999;
   background: linear-gradient(145deg, #ffffff, #f9f9f9);
@@ -83,13 +94,13 @@ button {
   color: #666;
   outline: none;
   border: none;
-  margin: 5px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  margin: 4px;
+  width: 2.1em;
+  height: 2.1em;
+  border-radius: 30%;
   background: linear-gradient(145deg, #ffffff, #f9f9f9);
   box-shadow:  inset 1px 1px 10px rgba(227,227,227, 0), inset -1px -1px 10px rgba(255,255,255, 0), 3px 3px 10px #dedede,  -3px -3px 10px #ffffff /*, inset -3px -3px 5px #e3e3e3*/;
-  font-size: 30px;
+  font-size: 2em;
   font-weight:300;
   text-shadow: 0px -1px 2px rgba(50,50,50, .35);
   padding-top: 1px;
@@ -107,7 +118,7 @@ button:active {
   box-shadow:   inset 1px 1px 10px #e3e3e3, inset -1px -1px 10px #ffffff/*, -3px -3px 5px #e3e3e3 */;
   background: linear-gradient(145deg, #f9f9f9, #ffffff);
   /*font-size: 29px;*/
-  transform: perspective(500px) translateZ(-10px);
+  transform: perspective(500px) translateZ(-5px);
 }
 
 .buttons {
@@ -118,9 +129,9 @@ button:active {
 
 .wide {
   margin: 5px;
-  width: 170px;
-  height: 80px;
-  border-radius: 80px;
+  width: 4.35em;
+  height: 2.1em;
+  border-radius: 25px;
 }
 
 .display {
@@ -136,18 +147,21 @@ button:active {
 }
 
 .output {
+  display: flex;
   font-size: 3.2em;
   height: 80px;
   color: #666;
   font-weight: 200;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .formula {
-  color: #999;
+  color: #aaa;
   min-height: 1.2em;
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: lighter;
-  padding-bottom: 5px;
+  padding: 5px 0 0;
 }
 
 .clear {

@@ -3,10 +3,11 @@ import './index.css';
 import Buttons from './Components/Buttons'
 import Display from './Components/Display'
 
-let ceRegex = new RegExp(/\d+$|(\d+[\+x\/-])$/);
-let opRegex = new RegExp(/[+x\/-]$/);
-let evalRegex = new RegExp(/[+*\/-]+$/);
-let decRegex = new RegExp(/\./);
+let ceRegex = new RegExp(/\d*\.?\d*$|(\d*\.?\d*[\+\*\/-])$/);  // add bracket functionality
+//let opRegex = new RegExp(/[+\*\/-]$/);
+let evalRegex = new RegExp(/[+*\/\-\.]+$/);
+//let decRegex = new RegExp(/\./);
+const signRegex = new RegExp(/(\(*\-\d*\.*\d*\)*)$/);
 
 export default class App extends React.Component {
   constructor(props) {
@@ -28,6 +29,7 @@ export default class App extends React.Component {
     this.handleEval = this.handleEval.bind(this);
     this.handleClear = this.handleClear.bind(this);
     this.handleDecimal = this.handleDecimal.bind(this);
+    this.handleMax = this.handleMax.bind(this);
     this.reset = this.reset.bind(this);
   }
   
@@ -81,182 +83,158 @@ export default class App extends React.Component {
   }
 
   handleNumbers(e) {
-      var value = this.state.value;
-      var output;
-    
-      if (!this.state.evald) {
-        if (value.length < this.state.maxChars) {
-          value += e.target.value;
-          output = parseFloat(value);
-          var size = this.getFontSize(value.toLocaleString());
-
-          this.setState({
-            value: value,
-            output: output.toLocaleString(),
-            outputSize: size
-          });
-          if (size === '0') {
-            this.setState({
-              prevValue: '0',
-              formula: '',
-              sign: '+',
-              last: '',
-              output: '',
-              evald: false,
-              outputSize: 3.2
-            });
-          }
-        }
-      } else {
-          this.setState({
-            value: e.target.value,
-            prevValue: '0',
-            formula: '',
-            sign: '+',
-            last: '',
-            output: '',
-            evald: false
-          });
+    const {value, formula, last, sign, maxChars } = this.state;
+    const newValue = e.target.value;
+    console.log(this.state);
+ 
+  if (last === 'eval') {
+    this.setState({
+      value: newValue,
+      formula: newValue,
+      last: 'num'
+    })
+  } else if ( !value.includes('MAX') ) {
+      if (value.length === maxChars) {
+        this.handleMax();
+      } else if (last === 'sign' && sign === '-' ) {
+        var val = value + newValue
+        this.setState({
+          value: val,
+          formula: formula.replace(signRegex, val),
+          prevValue: value,
+          last: 'num',
+          outputSize: this.getFontSize(val.toString())
+        })
+      } else if (value.length < maxChars ) {
+        var val = last === 'op' ? newValue : value + newValue;
+        this.setState({
+          value: val,
+          formula: formula + newValue,
+          prevValue: value,
+          last: 'num',
+          outputSize: this.getFontSize(val.toString())
+        })
       }
+    }
+    console.log(this.state);
   }
   
   handleSign(e) {
-    var value = this.state.output;
-    if (value[0] === '-') {
-      this.setState({
-        value: value.substr(1),
-        output: value.substr(1).toLocaleString()
+    const {value, formula, last, sign} = this.state;
+    console.log(this.state);
+    if (last === 'eval') {
+    } else if (sign === '+' && last !== 'op') {
+      this.setState({   
+        value: '-' + value,
+        formula: formula.slice(0, ((formula.length - 1) - value.toString().length + 1) ).concat('(-' + value + ')'),
+        last: 'sign',
+        sign: '-'
       })
+    } else if (last !== 'op') {
+      this.setState({   
+        value: value.slice(1),
+        formula: formula.replace(signRegex, value.slice(1)),
+        last: 'sign',
+        sign: '+'
+      })
+    }
+
+  }
+
+  handleDecimal(e) {
+    const {value, formula, last} = this.state;
+    
+    if ( last !== 'dec' && !value.includes('.') ) {
+      if (value === '' || last === 'op') {
+        this.setState({
+          value: '0.',
+          formula: formula + '0.',
+          last: 'dec'
+        })
+      } else {
+        this.setState({
+          value: value + '.',
+          formula: formula + '.',
+          last: 'dec'
+        })
+      }
+    }
+  }
+  
+  handleOperator(e) {
+    const {value, formula, last} = this.state;
+    const operator = e.target.value.replace('x', '*');
+    console.log(this.state);
+
+    if (last !== 'op' && value !== '' && value !== '-') {
+      this.setState({
+        value: operator,
+        formula: formula.replace('=','') + operator,
+        prevValue: value,
+        last: 'op',
+        sign: '+'
+      })
+    }
+    console.log(this.state);
+  }
+  
+  handleEval(e) {
+    if (this.state.last !== 'eval') {
+      let formula = this.state.formula;
+      formula = formula.replace(evalRegex, '')
+      try {
+        let result = Math.round(1000000000000 * eval(formula)) / 1000000000000;
+        this.setState({
+          value: result,
+          formula: formula + e.target.value,
+          last: 'eval',
+          outputSize: this.getFontSize(result.toString())
+        })
+      } catch (e) {
+        this.setState({
+          value: 'ERROR',
+          formula: '',
+          evald: true,
+          last: 'eval'
+      });
+      setTimeout(this.reset, 2000)
+      }
+    }
+  }
+  
+  handleClear(e) {
+    if (e.target.value === 'AC') {
+      this.reset();
     } else {
       this.setState({
-        value: '-' + value,
-        output: '-' + value.toLocaleString(),
+        value: '',
+        formula: this.state.formula.replace(ceRegex, '').replace('=', ''), 
+        last: 'ce'
       })
     }
   }
 
-  handleDecimal(e) {
-    var value = this.state.value;
-    var output = this.state.output; 
-      if (!this.state.evald) {
-        if (!this.state.value.match(decRegex) && value.length < this.state.maxChars) {
-          value += e.target.value;
-          output = parseFloat(value);
-          var size = this.getFontSize(value.toLocaleString());
-          this.setState({
-            value: value,
-            output: output.toLocaleString() + '.',
-            outputSize: size
-          });
-          if (size === '0') {
-            this.setState({
-              prevValue: '0',
-              formula: '',
-              sign: '+',
-              last: '',
-              output: '',
-              evald: false,
-              outputSize: 3.2
-            });
-          }
-        }
-      } else {
-          this.setState({
-            value: e.target.value,
-            prevValue: '0',
-            formula: '',
-            sign: '+',
-            last: '',
-            output: '',
-            evald: false
-          });
-      }
-  }
-  
-  handleOperator(e) {
-    var value = this.state.value 
-    var formula = this.state.formula
-    if (!formula.match(opRegex) || value !== '') {
-      value += e.target.value;
-    }
-      
-    if (!this.state.evald) {
-      this.setState({
-        prevValue: value,
-        value: '',
-        output: '',
-        formula: formula + value.replace('±','')
-      });
-    } else {
-        this.setState({
-          prevValue: '',
-          value: '',
-          formula: formula + e.target.value.replace(',','').replace('±',''),
-          evald: false
-        });
-    }
-  }
-  
-  handleEval(e) {
-    var value = this.state.value;
-    var formula = this.state.formula;
-    
-    if (!this.state.evald) {
-      if (this.state.value !== '') {
-        this.setState({
-           //value: '',
-           formula: formula += value
-        });
-      
-        formula = formula.replace('x', '*');
-        formula = formula.replace(evalRegex, '');
-        
-        try {
-          var answer = Math.round(100000000 * eval(formula)) / 100000000;
-        
-            this.setState({
-              value: answer,
-              output: answer.toLocaleString(),
-              evald: true,
-              outputSize: this.getFontSize(answer.toString())    
-            
-            });
-        } catch (e) {
-          this.setState({
-            value: '',
-            output: 'ERROR',
-            formula: '',
-            evald: true
-        });
-        setTimeout(this.reset, 2000)
-        }
-      }
-    }   
-  }
-  
-  handleClear(e) {
-    if (e.target.value === "AC") {
-      this.reset();
-    } else if(e.target.value === "CE") {
-      this.setState({
-        formula: this.state.formula.replace(ceRegex, '').replace('±','')
-      });
-      console.log(this.state.formula)
-    }
+  handleMax() {
+    this.setState({
+      value: 'MAX CHAR LIMIT',
+      prevValue: this.state.value
+    })
+    setTimeout( () => this.setState({
+      value: this.state.prevValue
+    }), 1000)
   }
   
   render() {
     return ( 
       <>
-        <div class="container">
-          <h1 class="title">Talculator 1.0</h1>
+        <div className="container">
           <div className="calculator">
+          <h1 className="title">Talculator</h1>
             <Display 
               outputSize={this.state.outputSize}
               formula={this.state.formula} 
-              value={this.state.output} 
+              value={this.state.value} 
             />
-            
             <Buttons 
               handleNum={this.handleNumbers}
               handleSign={this.handleSign}
@@ -264,8 +242,8 @@ export default class App extends React.Component {
               handleEval={this.handleEval}
               handleClr={this.handleClear}
               handleDec={this.handleDecimal}/>
+            <div class="author"> <a href="https://johndarke.net">JohnDarke.net</a></div>
           </div>
-           <div class="author">by <a href="https://johndarke.net">John Darke</a></div>
         </div>
       </>
     );
