@@ -115,11 +115,11 @@ button {
   padding-right: 0px;
   padding-left: 2px;
   padding-bottom: 0px;
-  transition: all .15s ease;
-  -webkit-transition: all .15s ease;
-  -moz-transition: all .15s ease;
-  -ms-transition: all .15s ease;
-  -o-transition: all .15s ease;
+  transition: all .2 ease;
+  -webkit-transition: all .2s ease;
+  -moz-transition: all .2s ease;
+  -ms-transition: all .2s ease;
+  -o-transition: all .2s ease;
 }
 
 button:active {
@@ -170,6 +170,7 @@ button:active {
   font-size: 1.2em;
   font-weight: lighter;
   padding: 5px 0 0;
+  overflow-wrap: break-word;
 }
 
 .clear {

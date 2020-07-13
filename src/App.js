@@ -48,7 +48,7 @@ export default class App extends React.Component {
   getFontSize(str) {
     switch(true) {
       case (str.length > this.state.maxChars):
-        return 0;
+        return 1.4;
         
       case (str.length === 9):
         return 3.1;
@@ -85,7 +85,7 @@ export default class App extends React.Component {
   handleNumbers(e) {
     const {value, formula, last, sign, maxChars } = this.state;
     const newValue = e.target.value;
-    console.log(this.state);
+    
  
   if (last === 'eval') {
     this.setState({
@@ -100,6 +100,7 @@ export default class App extends React.Component {
         var val = value + newValue
         this.setState({
           value: val,
+          output: parseFloat(val).toLocaleString(),
           formula: formula.replace(signRegex, val),
           prevValue: value,
           last: 'num',
@@ -107,16 +108,19 @@ export default class App extends React.Component {
         })
       } else if (value.length < maxChars ) {
         var val = last === 'op' ? newValue : value + newValue;
+        
         this.setState({
           value: val,
+          output: parseFloat(val).toLocaleString(),
           formula: formula + newValue,
           prevValue: value,
           last: 'num',
           outputSize: this.getFontSize(val.toString())
         })
+        console.log(this.state.output);
       }
     }
-    console.log(this.state);
+
   }
   
   handleSign(e) {
@@ -126,6 +130,7 @@ export default class App extends React.Component {
     } else if (sign === '+' && last !== 'op') {
       this.setState({   
         value: '-' + value,
+        output: value !== '' ? '-' + parseFloat(value).toLocaleString() : '-',
         formula: formula.slice(0, ((formula.length - 1) - value.toString().length + 1) ).concat('(-' + value + ')'),
         last: 'sign',
         sign: '-'
@@ -133,6 +138,7 @@ export default class App extends React.Component {
     } else if (last !== 'op') {
       this.setState({   
         value: value.slice(1),
+        output: parseFloat(value.slice(1)).toLocaleString(),
         formula: formula.replace(signRegex, value.slice(1)),
         last: 'sign',
         sign: '+'
@@ -148,12 +154,14 @@ export default class App extends React.Component {
       if (value === '' || last === 'op') {
         this.setState({
           value: '0.',
+          output: '0.',
           formula: formula + '0.',
           last: 'dec'
         })
       } else {
         this.setState({
           value: value + '.',
+          output: parseFloat(value).toLocaleString()  + '.',
           formula: formula + '.',
           last: 'dec'
         })
@@ -169,6 +177,7 @@ export default class App extends React.Component {
     if (last !== 'op' && value !== '' && value !== '-') {
       this.setState({
         value: operator,
+        output: operator,
         formula: formula.replace('=','') + operator,
         prevValue: value,
         last: 'op',
@@ -180,19 +189,23 @@ export default class App extends React.Component {
   
   handleEval(e) {
     if (this.state.last !== 'eval') {
-      let formula = this.state.formula;
+      let {formula, maxChars} = this.state;
       formula = formula.replace(evalRegex, '')
       try {
         let result = Math.round(1000000000000 * eval(formula)) / 1000000000000;
+        var output = (result.toString().length >= maxChars) ? parseFloat(result).toExponential(2) : parseFloat(result).toLocaleString();
+        console.log(output);
         this.setState({
           value: result,
+          output: output,
           formula: formula + e.target.value,
           last: 'eval',
-          outputSize: this.getFontSize(result.toString())
+          outputSize: this.getFontSize(output.toString())
         })
       } catch (e) {
         this.setState({
           value: 'ERROR',
+          output: 'ERROR',
           formula: '',
           evald: true,
           last: 'eval'
@@ -208,6 +221,7 @@ export default class App extends React.Component {
     } else {
       this.setState({
         value: '',
+        output: '',
         formula: this.state.formula.replace(ceRegex, '').replace('=', ''), 
         last: 'ce'
       })
@@ -217,10 +231,12 @@ export default class App extends React.Component {
   handleMax() {
     this.setState({
       value: 'MAX CHAR LIMIT',
+      output: 'MAX CHAR LIMIT',
       prevValue: this.state.value
     })
     setTimeout( () => this.setState({
-      value: this.state.prevValue
+      value: this.state.prevValue,
+      output: parseFloat(this.state.prevValue).toLocaleString(),
     }), 1000)
   }
   
@@ -233,7 +249,7 @@ export default class App extends React.Component {
             <Display 
               outputSize={this.state.outputSize}
               formula={this.state.formula} 
-              value={this.state.value} 
+              value={this.state.output} 
             />
             <Buttons 
               handleNum={this.handleNumbers}
@@ -242,7 +258,7 @@ export default class App extends React.Component {
               handleEval={this.handleEval}
               handleClr={this.handleClear}
               handleDec={this.handleDecimal}/>
-            <div class="author"> <a href="https://johndarke.net">JohnDarke.net</a></div>
+            <div className="author"> <a href="https://johndarke.net">JohnDarke.net</a></div>
           </div>
         </div>
       </>
