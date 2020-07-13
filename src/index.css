@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Chewy&family=Fredoka+One&family=Modak&family=Special+Elite&display=swap');
 
 html {
+  
+  width: 100%;
   height: 100%;
+  background: #aaa;
+  background-color: #d9d9d9;
+  background-image: radial-gradient(circle, rgba(233,233,233,1) 48%, rgba(209,213,213,1) 100%);
 }
 
 a:link, a:visited{
@@ -17,12 +22,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+ 
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 #root {
   display: flex;
   justify-content: center;
@@ -38,7 +45,7 @@ code {
 
 
 h1, .author {
-  font-size: 1em;
+  font-size: .8em;
   color:  #f8f8f8;
   margin: 0px;
   font-family: 'Fira Sans', sans-serif;
@@ -49,14 +56,15 @@ h1, .author {
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 1.7em;
   letter-spacing: .4em;
 }
 
 .author {
   letter-spacing: 1px;
-  margin: .5em 0 -.5em;
+  margin: 1em 0 -.2em;
   transition: color .4s ease;
+  letter-spacing: .4em;
 }
 
 .author:hover, a:hover {
@@ -95,12 +103,12 @@ button {
   outline: none;
   border: none;
   margin: 4px;
-  width: 2.1em;
-  height: 2.1em;
+  width: 67px;
+  height:67px;
   border-radius: 30%;
   background: linear-gradient(145deg, #ffffff, #f9f9f9);
   box-shadow:  inset 1px 1px 10px rgba(227,227,227, 0), inset -1px -1px 10px rgba(255,255,255, 0), 3px 3px 10px #dedede,  -3px -3px 10px #ffffff /*, inset -3px -3px 5px #e3e3e3*/;
-  font-size: 2em;
+  font-size: 1.6em;
   font-weight:300;
   text-shadow: 0px -1px 2px rgba(50,50,50, .35);
   padding-top: 1px;
@@ -129,8 +137,8 @@ button:active {
 
 .wide {
   margin: 5px;
-  width: 4.35em;
-  height: 2.1em;
+  width: 137px;
+  height: 67px;
   border-radius: 25px;
 }
 
