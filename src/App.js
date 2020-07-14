@@ -1,12 +1,13 @@
 import React from 'react';
 import './index.css';
-import Buttons from './Components/Buttons'
-import Display from './Components/Display'
+import Buttons from './Components/Buttons';
+import Display from './Components/Display';
 
-const ceRegex = new RegExp(/\d*\.?\d*$|(\d*\.?\d*[\+\*\/-])$/);  // add bracket functionality
-const evalRegex = new RegExp(/[+*\/\-\.]+$/);
-const signRegex = new RegExp(/(\(*\-\d*\.*\d*\)*)$/);
-const warn = 'MAX CHAR LIMIT';
+const ceRegex = new RegExp(/\d*\.?\d*$|(\d*\.?\d*[\+\*\/-])$|\(\S*\)$/),  // add bracket functionality
+      evalRegex = new RegExp(/[+*\/\-\.]+$/),
+      signRegex = new RegExp(/(\(*\-\d*\.*\d*\)*)$/),
+      warn = 'MAX CHAR LIMIT',
+      err = 'ERROR';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -38,7 +39,7 @@ export default class App extends React.Component {
         prevValue: '0',
         formula: '',
         sign: '+',
-        last: '',
+        last: 'AC',
         output: '',
         evald: false
     });
@@ -47,7 +48,7 @@ export default class App extends React.Component {
   getFontSize(str) {
     switch(true) {
       case (str.length > this.state.maxChars):
-        return 1.6;
+        return 1.65;
         
       case (str.length === 9):
         return 3.1;
@@ -74,7 +75,7 @@ export default class App extends React.Component {
         return 1.70;
         
       case (str.length === 17):
-        return 1.6;
+        return 1.7;
         
       default:
         return 3.2;
@@ -82,68 +83,70 @@ export default class App extends React.Component {
   }
 
   handleNumbers(e) {
-    const {value, formula, last, sign, maxChars } = this.state;
+    const { value, formula, last, sign, maxChars } = this.state;
     const newValue = e.target.value;
 
-  if (last === 'eval') {
-    this.setState({
-      value: newValue,
-      formula: newValue,
-      last: 'num'
-    })
-  } else if ( !value.includes('MAX') ) {
-      if (value.length === maxChars) {
-        this.handleMax();
-      } else if (last === 'sign' && sign === '-' ) {
-        var val = value + newValue
-        this.setState({
-          value: val,
-          output: parseFloat(val).toLocaleString(),
-          formula: formula.replace(signRegex, val),
-          prevValue: value,
-          last: 'num',
-          outputSize: this.getFontSize(val.toString())
-        })
-      } else if (value.length < maxChars ) {
-        var val = last === 'op' ? newValue : value + newValue;
-        this.setState({
-          value: val,
-          output: parseFloat(val).toLocaleString(),
-          formula: formula + newValue,
-          prevValue: value,
-          last: 'num',
-          outputSize: this.getFontSize(val.toString())
-        })
+    if (last === 'eval') {
+      this.setState({
+        value: newValue,
+        formula: newValue,
+        output: newValue,
+        last: 'num'
+      });
+    } else if ( !value.includes('MAX') ) {
+        var val;
+        if (value.length === maxChars) {
+          this.handleMax();
+        } else if (last === 'sign' && sign === '-' ) {
+          val = value + newValue
+          this.setState({
+            value: val,
+            output: parseFloat(val).toLocaleString(),
+            formula: formula.replace(signRegex, val),
+            prevValue: value,
+            last: 'num',
+            outputSize: this.getFontSize(val.toString())
+          });
+        } else if (value.length < maxChars ) {
+          val = last === 'op' ? newValue : value + newValue;
+          this.setState({
+            value: val,
+            output: parseFloat(val).toLocaleString(),
+            formula: formula + newValue,
+            prevValue: value,
+            last: 'num',
+            outputSize: this.getFontSize(val.toString())
+          });
+        }
       }
-    }
   }
   
   handleSign(e) {
-    const {value, formula, last, sign} = this.state;
+    const { value, formula, last, sign } = this.state;
     console.log(this.state);
-    if (last === 'eval') {
-    } else if (sign === '+' && last !== 'op') {
-      this.setState({   
-        value: '-' + value,
-        output: value !== '' ? '-' + parseFloat(value).toLocaleString() : '-',
-        formula: formula.slice(0, ((formula.length - 1) - value.toString().length + 1) ).concat('(-' + value + ')'),
-        last: 'sign',
-        sign: '-'
-      })
-    } else if (last !== 'op') {
-      this.setState({   
-        value: value.slice(1),
-        output: parseFloat(value.slice(1)).toLocaleString(),
-        formula: formula.replace(signRegex, value.slice(1)),
-        last: 'sign',
-        sign: '+'
-      })
+    if (last !== 'eval' && last !== 'op') {
+      if (sign === '+') {
+        this.setState({   
+          value: '-' + value,
+          output: value !== '' ? '-' + parseFloat(value).toLocaleString() : '-',
+          formula: formula.slice(0, ((formula.length - 1) - value.toString().length + 1) ).concat('(-' + value + ')'),
+          last: 'sign',
+          sign: '-'
+        });
+      } else {
+        this.setState({   
+          value: value.slice(1),
+          output: parseFloat(value.slice(1)).toLocaleString(),
+          formula: formula.replace(signRegex, value.slice(1)),
+          last: 'sign',
+          sign: '+'
+        });
+      }
     }
-
   }
 
   handleDecimal(e) {
-    const {value, formula, last} = this.state;
+    const { value, formula, last } = this.state;
     
     if ( last !== 'dec' && !value.includes('.') ) {
       if (value === '' || last === 'op') {
@@ -152,20 +155,20 @@ export default class App extends React.Component {
           output: '0.',
           formula: formula + '0.',
           last: 'dec'
-        })
+        });
       } else {
         this.setState({
           value: value + '.',
-          output: parseFloat(value).toLocaleString()  + '.',
+          output: parseFloat(value).toLocaleString() + '.',
           formula: formula + '.',
           last: 'dec'
-        })
+        });
       }
     }
   }
   
   handleOperator(e) {
-    const {value, formula, last} = this.state;
+    const { value, formula, last } = this.state;
     const operator = e.target.value.replace('x', '*');
     
     if (last !== 'op' && value !== '' && value !== '-') {
@@ -176,29 +179,32 @@ export default class App extends React.Component {
         prevValue: value,
         last: 'op',
         sign: '+'
-      })
+      });
     }
   }
   
   handleEval(e) {
-    if (this.state.last !== 'eval') {
-      let {formula, maxChars} = this.state;
-      formula = formula.replace(evalRegex, '')
+    let { formula, maxChars, last } = this.state;
+
+    if (last !== 'eval') {
+      formula = formula.replace(evalRegex, '');
       try {
-        let result = Math.round(100000000000 * eval(formula)) / 100000000000;
-        var output = (result.toString().length > maxChars) ? parseFloat(result).toExponential(2) : parseFloat(result).toLocaleString();
-        console.log(output.replace(',', ''));
+        const result = Math.round(100000000000 * eval(formula)) / 100000000000,
+              output = result.toString().length > maxChars
+                    ? parseFloat(result).toExponential(2)
+                    : parseFloat(result).toLocaleString(),
+              fontSize = this.getFontSize(output);  // removed toLocaleString() and toString() from output
         this.setState({
           value: result,
           output: output,
           formula: formula + e.target.value,
           last: 'eval',
-          outputSize: this.getFontSize(output.toString().replace(',', ''))
-        })
+          outputSize: fontSize
+        });
       } catch (e) {
         this.setState({
-          value: 'ERROR',
-          output: 'ERROR',
+          value: err,
+          output: err,
           formula: '',
           evald: true,
           last: 'eval'
@@ -212,47 +218,49 @@ export default class App extends React.Component {
     if (e.target.value === 'AC') {
       this.reset();
     } else {
+      const newFormula = this.state.formula.replace(ceRegex, '').replace('=', '');  // refactor into a sep let
       this.setState({
         value: '',
         output: '',
-        formula: this.state.formula.replace(ceRegex, '').replace('=', ''), 
+        formula: newFormula, 
         last: 'ce'
       })
     }
   }
 
   handleMax() {
+    const { prevValue, value } = this.state;
     this.setState({
       value: warn,
       output: warn,
-      prevValue: this.state.value
+      prevValue: value
     })
     setTimeout( () => this.setState({
-      value: this.state.prevValue,
-      output: parseFloat(this.state.prevValue).toLocaleString(),
+      value: prevValue,
+      output: parseFloat(prevValue).toLocaleString(),
     }), 1000)
   }
   
   render() {
     return ( 
-        <div className="container">
-          <div className="calculator">
-          <h1 className="title">Talculator</h1>
-            <Display 
-              outputSize={this.state.outputSize}
-              formula={this.state.formula} 
-              value={this.state.output} 
-            />
-            <Buttons 
-              handleNum={this.handleNumbers}
-              handleSign={this.handleSign}
-              handleOp={this.handleOperator}
-              handleEval={this.handleEval}
-              handleClr={this.handleClear}
-              handleDec={this.handleDecimal}/>
-            <div className="author"> <a href="https://johndarke.net">JohnDarke.net</a></div>
-          </div>
+      <div className="container">
+        <div className="calculator">
+        <h1 className="title">Talculator</h1>
+          <Display 
+            outputSize={this.state.outputSize}
+            formula={this.state.formula} 
+            value={this.state.output} 
+          />
+          <Buttons 
+            handleNum={this.handleNumbers}
+            handleSign={this.handleSign}
+            handleOp={this.handleOperator}
+            handleEval={this.handleEval}
+            handleClr={this.handleClear}
+            handleDec={this.handleDecimal}/>
+          <div className="author"> <a href="https://johndarke.net">JohnDarke.net</a></div>
         </div>
+      </div>
     );
   }
 }
