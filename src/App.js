@@ -3,7 +3,7 @@ import './index.css';
 import Buttons from './Components/Buttons';
 import Display from './Components/Display';
 
-const ceRegex = new RegExp(/\d*\.?\d*$|(\d*\.?\d*[\+\*\/-])$|\(\S*\)$/),  // add bracket functionality
+const ceRegex = new RegExp(/\d*\.?\d*$|(\d*\.?\d*[\+\*\/-])$|\(\S*\)$/),  
       evalRegex = new RegExp(/[+*\/\-\.]+$/),
       signRegex = new RegExp(/(\(*\-\d*\.*\d*\)*)$/),
       warn = 'MAX CHAR LIMIT',
@@ -45,10 +45,11 @@ export default class App extends React.Component {
     });
   }
   
+  
   getFontSize(str) {
     switch(true) {
       case (str.length > this.state.maxChars):
-        return 1.65;
+        return 1.55;
         
       case (str.length === 9):
         return 3.1;
@@ -69,13 +70,13 @@ export default class App extends React.Component {
         return 2.05;
         
       case (str.length === 15):
-        return 1.85;
+        return 1.9;
         
       case (str.length === 16):
-        return 1.70;
+        return 1.7;
         
       case (str.length === 17):
-        return 1.7;
+        return 1.6;
         
       default:
         return 3.2;
@@ -123,21 +124,24 @@ export default class App extends React.Component {
   
   handleSign(e) {
     const { value, formula, last, sign } = this.state;
-    console.log(this.state);
+
     if (last !== 'eval' && last !== 'op') {
       if (sign === '+') {
         this.setState({   
           value: '-' + value,
-          output: value !== '' ? '-' + parseFloat(value).toLocaleString() : '-',
-          formula: formula.slice(0, ((formula.length - 1) - value.toString().length + 1) ).concat('(-' + value + ')'),
+          output: value !== '' 
+                  ? '-' + parseFloat(value).toLocaleString() 
+                  : '-',
+          formula: formula.slice(0, (formula.length - value.toString().length) ).concat('(-' + value + ')'),
           last: 'sign',
           sign: '-'
         });
       } else {
+        let newValue = value.slice(1);
         this.setState({   
-          value: value.slice(1),
-          output: parseFloat(value.slice(1)).toLocaleString(),
-          formula: formula.replace(signRegex, value.slice(1)),
+          value: newValue,
+          output: parseFloat(newValue).toLocaleString(),
+          formula: formula.replace(signRegex, newValue),
           last: 'sign',
           sign: '+'
         });
@@ -193,7 +197,7 @@ export default class App extends React.Component {
               output = result.toString().length > maxChars
                     ? parseFloat(result).toExponential(2)
                     : parseFloat(result).toLocaleString(),
-              fontSize = this.getFontSize(output);  // removed toLocaleString() and toString() from output
+              fontSize = this.getFontSize(result.toString());  // need to rescan if exponent, use if to replace ternary, or use auto-scaling text idea
         this.setState({
           value: result,
           output: output,
